@@ -164,6 +164,8 @@ public class EntityTameableDragon extends EntityTameable implements IShearable, 
 			.<Boolean>createKey(EntityTameableDragon.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> CHESTED = EntityDataManager
 			.<Boolean>createKey(EntityTameableDragon.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> ALLOW_OTHERPLAYERS = EntityDataManager
+			.<Boolean>createKey(EntityTameableDragon.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> ARMOR = EntityDataManager
 			.<Integer>createKey(EntityTameableDragon.class, DataSerializers.VARINT);
 	private static final DataParameter<Optional<UUID>> DATA_BREEDER = EntityDataManager
@@ -726,35 +728,20 @@ public class EntityTameableDragon extends EntityTameable implements IShearable, 
 	public EnumCreatureAttribute getCreatureAttribute() {
 		return getBreed().getCreatureAttribute();
 	}
-
-	/**
-	 * I made this method so any player can make the dragon sit, possibly be used
-	 * for other interactions,
-	 * 
-	 * @author TheRPGAdventurer
-	 */
-	public EntityLivingBase getOtherPlayers() {
-		if(DragonMountsConfig.allowOtherPlayerControl) {
-		    for (int i = 0; i < world.playerEntities.size();) {
-			    EntityPlayer entityplayer = world.playerEntities.get(i);
-			    return entityplayer;
-		    }
-		}		return null;
+	
+	@Override
+	public EntityLivingBase getOwner() {
+		for (int i = 0; i < world.playerEntities.size();) {
+			EntityPlayer entityplayer = world.playerEntities.get(i);
+			return entityplayer;
+		}   return null;
 	}
 	
-	/**
-	 * I made this method so any player can make the dragon sit, possibly be used
-	 * for other interactions,
-	 * 
-	 * @author TheRPGAdventurer
-	 */
-	public EntityLivingBase getLastRidingPlayer() {
-		if(DragonMountsConfig.allowOtherPlayerControl) {
-		    for (int i = 0; i < world.playerEntities.size();) {
-			    EntityPlayer entityplayer = world.playerEntities.get(i);
-			    return entityplayer;
-		    }
-		}		return null;
+	public EntityPlayer getLastControllingPlayer(EntityPlayer player) {
+		if(player == getControllingPlayer()) {
+		    player.getUniqueID();
+		} 
+		  return player;
 	}
 
 	/**
