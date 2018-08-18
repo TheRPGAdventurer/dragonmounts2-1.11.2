@@ -736,13 +736,6 @@ public class EntityTameableDragon extends EntityTameable implements IShearable, 
 			return entityplayer;
 		}   return null;
 	}
-	
-	public EntityPlayer getLastControllingPlayer(EntityPlayer player) {
-		if(player == getControllingPlayer()) {
-		    player.getUniqueID();
-		} 
-		  return player;
-	}
 
 	/**
 	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets
@@ -1462,9 +1455,11 @@ public class EntityTameableDragon extends EntityTameable implements IShearable, 
 			EntityTameable targetDragon = (EntityTameable) target;
 			return ((EntityTameableDragon)target).getLifeStageHelper().getTicksSinceCreation() 
 			     >= ((EntityTameableDragon)target).getAppropriateAgeForInteraction();
+		} else if (target.hasCustomName()){
+			return false;  
 		} else {
-			return false; 
-		}	
+		     return false;
+		}
         
     }
 	
@@ -1758,10 +1753,6 @@ public class EntityTameableDragon extends EntityTameable implements IShearable, 
 		if(getArmorResistance() != 0) {
 			damage -= damageReduction;
 		}
-		
-        if (source instanceof EntityDamageSource && ((EntityDamageSource)source).getIsThornsDamage()) {
-            this.attackEntityFromPart(this.dragonPartHead, source, damage);
-        }
 
         if (dragonPart == this.dragonPartHead) {
             damage = damage + 4.0F + Math.min(damage, 1.0F);
